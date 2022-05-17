@@ -17,12 +17,12 @@ const Store = (props) => {
 
     const { id } = useParams()
     const location = useLocation()
-    const {pathname} = location
+    const { pathname } = location
 
     useEffect(() => {
-        if(pathname.includes('supplier/')){
+        if (pathname.includes('supplier/')) {
             setActivePath(pathname.split('/')[4]?.split('%20').join(' '))
-        }else if(pathname.includes('category/')){
+        } else if (pathname.includes('category/')) {
             setActivePath(pathname.split('/')[3]?.split('%20').join(' '))
         }
         getAllCategories(true)
@@ -32,30 +32,31 @@ const Store = (props) => {
         loadAllProducts(onlyCats).then((cats) => {
             setCategories(cats)
         })
-    },[])
+    }, [])
 
 
 
     return categories ? (
         <div className='flex flex-col lg:flex-row w-full h-full'>
-            <div className='flex w-full lg:w-[20%] flex-col items-center lg:border-r-2 border-black/5 space-y-4'>
-                {pathname.includes('supplier/')&& <SupplierCard name={pathname.split('/')[3]} />}
-                <CategoryDropMenu categories={categories} pathname={pathname} activePath={activePath} />
+            <CategoryDropMenu categories={categories} pathname={pathname} activePath={activePath} />
+            <div className='flex w-full lg:w-[20%] mt-20 lg:mt-2 flex-col items-center lg:border-r-2 border-black/5 space-y-4'>
+                {pathname.includes('supplier/') && <SupplierCard name={pathname.split('/')[3]} />}
                 <div className='w-full hidden lg:block px-2 overflow-y-auto scrollbar h-full'>
                     {/* move to own component`` */}
                     <span className='w-full py-2 flex flex-col px-4 text-xl font-bold mb-6 text-primary-500 underline underline-offset-1'>Categories</span>
 
                     {categories?.map((i, index) => {
                         return (
-                            <Link to={`${pathname.includes('supplier/')?  `/store/supplier/${pathname.split('/')[3]}/${i}`: `/store/category/${i}`}`} className={`w-full ${activePath === i && 'bg-primary-500 text-white'} inline-block py-2 px-4 hover:bg-primary-100 rounded cursor-pointer`} key={index}>
+                            <Link to={`${pathname.includes('supplier/') ? `/store/supplier/${pathname.split('/')[3]}/${i}` : `/store/category/${i}`}`} className={`w-full ${activePath === i && 'bg-primary-500 text-white'} inline-block py-2 px-4 hover:bg-primary-100 rounded cursor-pointer`} key={index}>
                                 <span className='font-medium'>{i}</span>
                             </Link>
                         )
                     })}
+                    <div className='w-full h-16' />
                 </div>
             </div>
-            <div className='w-full lg:w-[55%] mt-20 lg:mt-2 overflow-y-auto scrollbar  pb-10'>
-               {pathname === '/store'? <Main /> : <Outlet />}
+            <div className='w-full lg:w-[55%] overflow-y-auto scrollbar  pb-10'>
+                {pathname === '/store' ? <Main /> : <Outlet />}
             </div>
             <div className='hidden lg:flex w-[25%] h-auto'>
                 <CartComponent />

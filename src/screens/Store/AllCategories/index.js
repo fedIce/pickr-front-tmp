@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { CategoryLoadingCard, LoadingCard } from '../../../Components/LoadingCard'
 import { LoadCategories } from '../../../redux/actions'
 
 const AllCategories = (props) => {
@@ -38,9 +39,15 @@ const AllCategories = (props) => {
             </div>
             <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-wrap'>
                 {
-                    _categories?.map((item, indx) => {
-                        return <CategoryCardAlt data={item} key={indx} />
-                    })
+                    
+                    _categories ?
+                        _categories?.map((item, indx) => {
+                            return <CategoryCardAlt data={item} key={indx} />
+                        })
+                        :
+                        [...(new Array(15))].map((_, indx) => {
+                            return <CategoryLoadingCard key={indx} />
+                        })
                 }
             </div>
         </div>

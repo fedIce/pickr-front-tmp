@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
+import { SupplierLoadingCard } from '../../../Components/LoadingCard'
 import { CategorySuppliersCard } from '../../../Components/Suppliers'
 import { LoadSupplier } from '../../../redux/actions'
 
@@ -42,10 +43,14 @@ const AllSuppliers = (props) => {
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-4'>
                     {
-                        suppliers &&
-                        suppliers.map((item, indx) => {
-                            return <CategorySuppliersCard item={item} key={indx} />
-                        })
+                        suppliers ?
+                            suppliers?.map((item, indx) => {
+                                return <CategorySuppliersCard item={item} key={indx} />
+                            })
+                            :
+                            [...(new Array(4))].map((_, indx) => {
+                                return <SupplierLoadingCard key={indx} />
+                            })
                     }
                 </div>
             </div>

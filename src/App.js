@@ -29,6 +29,7 @@ import Main from './screens/Dashboard/Main';
 import DeliveryInformation from './screens/Others/DeliveryInformationPage';
 import FAQ from './screens/Others/FAQ';
 import VerifyEmail from './screens/Auth/VerifyEmail';
+import LoginNotice from './Components/LoginNotice';
 
 function App(props) {
     const [user, setUser] = useState(null)
@@ -121,6 +122,7 @@ function App(props) {
                         }
                     </div>
                 </div>
+
             </div >
         </AlertProvider>
     );

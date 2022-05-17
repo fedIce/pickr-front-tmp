@@ -86,6 +86,7 @@ const ProfileUpdateForm = ({ updateUserState, user }) => {
                 (async () => {
                     addressObj['country'] = country.value
                     addressObj['city'] = city.value
+                    addressObj['address'] = address
                     const newData = {
                         ...user,
                         username,

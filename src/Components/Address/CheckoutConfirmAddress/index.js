@@ -11,6 +11,8 @@ const CheckoutConfirmAddress = (props) => {
 
     let { user, updateUser } = props
     user = user.user
+    console.log(user)
+
 
     const user_address = user?.delivery_address ? user.delivery_address?.address : 'No Address Entered'
     const homeAddress = user?.isHomeAddress ? user.isHomeAddress : null

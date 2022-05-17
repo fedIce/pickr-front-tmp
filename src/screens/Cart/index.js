@@ -14,6 +14,7 @@ import { hasRequiredCheckoutInfo, sanitizeOrder } from '../../functions/paymentF
 import { CreateOrder, setUserData } from '../../redux/actions'
 import CheckoutDetailsModal from '../../Components/Address/CheckoutDetailsModal'
 import { useAlert } from '../../GlobalContexts/ErrorContext'
+import OrderCompletedModal from '../../Components/OrderCompletedModal'
 
 
 
@@ -25,6 +26,7 @@ const CartScreen = (props) => {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [fb_user, setFBUSER] = useState(null)
+    const [finishOrder, setFinishOrder] = useState(null)
 
 
     useEffect(() => {
@@ -55,7 +57,8 @@ const CartScreen = (props) => {
 
     
     const handleCheckOut = () => {
-        if(!user?.user) return alert.setalert({title:'No Address Entered', body:'hey, you\'re almost done, locate the address bar and add a delivery address to continue.', type: 'error'})
+        if(!user?.user) return 
+        if(!user?.user.delivery_address?.address) return alert.setalert({title:'No Address Entered', body:'hey, you\'re almost done, locate the address bar and add a delivery address to continue.', type: 'error'})
         const required_data = {
             email: user?.user.email,
             address: user?.user.delivery_address.address,
@@ -77,6 +80,12 @@ const CartScreen = (props) => {
                     if (!res.error) {
                         await sendOrder(uid, res).then(result => {
                             console.log(result, 'DONE!')
+                            setFinishOrder({
+                                subtotal: parseFloat(total) + parseFloat(discount) + parseFloat(deliveryPrice.price),
+                                discount: discount,
+                                total: total,
+                                delivery: deliveryPrice
+                            })
                         }).catch((err) => {
                             console.log(err)
                         })
@@ -92,6 +101,7 @@ const CartScreen = (props) => {
     return (
         <div className='w-full h-full flex flex-col lg:flex-row overflow-y-auto pb-12 scrollbar'>
             <CheckoutDetailsModal open={open} setOpen={setOpen} />
+            {finishOrder && <OrderCompletedModal  data={finishOrder} toggle={setFinishOrder} />}
             <div className='w-full lg:w-[75%] py-5 px-2 sm:px-5 border-r-2 border-black/5'>
                 <div className='flex justify-between items-center px-2 sm:px-5'>
                     <div className='font-bold text-primary-500 text-lg'>My Shopping Cart</div>
