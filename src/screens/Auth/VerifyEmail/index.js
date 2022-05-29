@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../../../config/firebase'
 import { useAuth } from '../../../GlobalContexts/AuthProvider'
 import { useAlert } from '../../../GlobalContexts/ErrorContext'
 import {ReactComponent as Loader} from '../../../assets/spinner.svg'
+import { useNavigate } from 'react-router-dom'
 const vemail = require('../../../assets/vemail.gif')
 
 const VerifyEmail = () => {
     const user = useAuth()
     const alert = useAlert()
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if(auth.currentUser.emailVerified){
+            navigate('/dashboard')
+        }
+    },[auth.currentUser.emailVerified])
 
     const sendEmailVerification = () => {
         (async () => {

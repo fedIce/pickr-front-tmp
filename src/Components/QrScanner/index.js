@@ -45,6 +45,7 @@ const QrScanner = (props) => {
         <div className='w-full h-full'>
             <QrReader
                 delay={delay}
+                facingMode="environment"
                 style={previewStyle}
                 onError={handleError}
                 onScan={handleScan}

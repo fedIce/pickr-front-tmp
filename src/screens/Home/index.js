@@ -61,7 +61,7 @@ const Home = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className='xl:fixed absolute left-0 w-[55%] z-0 ml-10 flex justify-end xl:block  '>
+                <div className='xl:fixed absolute left-0 w-[55%] z-0 ml-10 flex justify-end xl:block '>
                     <div className={` ease_transition ${isVisible ? 'opacity-100' : 'opacity-0'} hidden w-full bg-white  xl:block xl:absolute top-0`} >
                         <NavBar />
                     </div>

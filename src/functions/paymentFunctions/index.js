@@ -32,18 +32,18 @@ export const emptyStringIfUNDEFINED = (data) => {
 export const sanitizeOrder = async (check_out_data) => {
 
     try {
-        const courierInfo = { prize: parseFloat(check_out_data.total).toFixed(2), type: 'shopping', cartData: check_out_data.cartData }
+        const courierInfo = { prize: parseFloat(check_out_data.total).toFixed(2), discount: check_out_data.totalDiscount, delivery: check_out_data.delivery, type: 'shopping', cartData: check_out_data.cartData }
         const order = {
             paymentMethod: check_out_data.paymentMethod,
-            country: emptyStringIfUNDEFINED(check_out_data.user.delivery_address?.country),
-            state: emptyStringIfUNDEFINED(check_out_data.user.delivery_address?.city),
+            country: emptyStringIfUNDEFINED(check_out_data.user?.country),
+            state: emptyStringIfUNDEFINED(check_out_data.user?.city),
             avatar: check_out_data.user.avatar,
             courierInfo,
             closestBustop: emptyStringIfUNDEFINED(check_out_data.user.closestBustop),
             postCode: emptyStringIfUNDEFINED(check_out_data.user?.postalCode),
             fullName: check_out_data.user.fullName,
             phone: check_out_data.user.phone,
-            extraData: { address: check_out_data.user.delivery_address?.address }
+            extraData: { address: check_out_data.user.delivery_address ? check_out_data.user.delivery_address.address : check_out_data.user.address  }
         }
         return order
     } catch (e) {

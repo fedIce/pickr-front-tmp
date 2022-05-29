@@ -1,7 +1,7 @@
 import { RefreshIcon, TrashIcon } from '@heroicons/react/outline'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CheckoutConfirmAddress from '../../Components/Address/CheckoutConfirmAddress'
 import CartItem from '../../Components/CartComponent/CartItem'
 import DeliveryMode from '../../Components/DeliveryMode'
@@ -31,6 +31,7 @@ const CartScreen = (props) => {
 
     useEffect(() => {
         setFBUSER(auth.currentUser)
+        console.log(user)
     }, [])
 
 
@@ -39,15 +40,23 @@ const CartScreen = (props) => {
     const { currency } = useServiceSwitch()
     const discount = cart.getDiscount()
     const alert = useAlert()
+    const navigate = useNavigate()
     const { price } = props
-    const total = (cart.getTotal() - discount)
     const delivery = (price.data?.price.price + ((price.data?.price.price * deliveryPrice.price) / 100))
+    const total = (cart.getTotal() - discount + delivery)
 
     const check_out_data = {
         cartData: [...cart.cart],
         total,
-        delivery: deliveryPrice,
-        user: { ...user.user, ...fb_user },
+        totalDiscount: discount,
+        delivery: delivery,
+        user: { 
+            ...user.user,
+             ...fb_user,
+            address:  user?.user?.delivery_address? user?.user.delivery_address.address : user?.user?.address,
+            country: user?.user?.delivery_address? user?.user.delivery_address.country: user?.user?.country,
+            city: user?.user?.delivery_address? user?.user.delivery_address.city: user?.user?.city,
+        },
         paymentMethod: paymentOption
     }
 
@@ -57,13 +66,13 @@ const CartScreen = (props) => {
 
     
     const handleCheckOut = () => {
-        if(!user?.user) return 
-        if(!user?.user.delivery_address?.address) return alert.setalert({title:'No Address Entered', body:'hey, you\'re almost done, locate the address bar and add a delivery address to continue.', type: 'error'})
+        if(!user?.user) return navigate('/dashboard') 
+        if(!((user?.user?.delivery_address?.address) || (user?.user?.address)) ) return alert.setalert({title:'No Address Entered', body:'hey, you\'re almost done, locate the address bar and add a delivery address to continue.', type: 'error'})
         const required_data = {
             email: user?.user.email,
-            address: user?.user.delivery_address.address,
-            country: user?.user.delivery_address.country,
-            city: user?.user.delivery_address.city,
+            address: user?.user.delivery_address? user?.user.delivery_address.address : user?.user.address,
+            country: user?.user.delivery_address? user?.user.delivery_address.country: user?.user.country,
+            city: user?.user.delivery_address? user?.user.delivery_address.city: user?.user.city,
             phoneNumber: user.user?.phone
         }
         setLoading(true)

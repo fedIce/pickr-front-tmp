@@ -11,6 +11,7 @@ import { ClipboardCheckIcon, ClipboardIcon, ClipboardListIcon } from '@heroicons
 import { useOrder } from '../../Components/OrderCards/OrderContexts'
 import ConfirmDelivery from '../../Components/ConfirmDelivery'
 import { useAlert } from '../../GlobalContexts/ErrorContext'
+import { auth } from '../../config/firebase'
 
 
 const Orders = (props) => {
@@ -110,6 +111,9 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default compose(
-    firestoreConnect(() => ['DeliveryRequests']), // or { collection: 'DeliveryRequests' }
+    firestoreConnect(() => [{
+        collection: 'DeliveryRequests',
+        where: [['senderId', '==', auth?.currentUser.uid]]
+    }]), // or { collection: 'DeliveryRequests' }
     connect(mapStateToProps, mapDispatchToProps)
 )(Orders)

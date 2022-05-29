@@ -65,7 +65,7 @@ const Cart = ({ children, localCartUpdate, cartData }) => {
         let total = 0
         cart.forEach(item => {
             if (item.discount) {
-                total += parseFloat(item.discount) * parseInt(item.count)
+                total += (parseFloat(item.discount)/parseFloat(item.price)) * parseInt(item.count)
             }
         })
         return total.toFixed(2)

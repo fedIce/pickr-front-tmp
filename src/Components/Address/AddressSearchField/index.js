@@ -1,52 +1,54 @@
 import { HomeIcon, LocationMarkerIcon, SearchIcon } from '@heroicons/react/outline'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SearchAddressPallete from '../../CommandPalletes/SearchAddressPallete'
 
 
-const addresses = [
-    {
-        address: 'The full address of the locatio',
-        area: 'The state, city, and country',
-        distance: 234.44
-    },
-    {
-        address: 'The full address of the locatio',
-        area: 'The state, city, and country',
-        distance: 234.44
-    },
-    {
-        address: 'The full address of the locatio',
-        area: 'The state, city, and country',
-        distance: 234.44
-    },
-    {
-        address: 'The full address of the locatio',
-        area: 'The state, city, and country',
-        distance: 234.44
-    }
-]
 
 export const AddressSearchComboField = (props) => {
 
+
+
     const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState(false)
-    const [search, setSearch] = useState(addresses)
+    const [search, setSearch] = useState(null)
     const [isHomeAddress, setIsHomeAddress] = useState(true)
+    const [homeAddress, setHomeAddress] = useState(null)
     let { user, setUser, user_address } = props
     user = user.user
-    const homeAddress = user?.address ? {
-        address: user.address,
-        city: user.city,
-        country: user.country,
-        latlon: { longitude: user.extra?.longitude, latitude: user.extra?.latitude }
-    } : null
+    const parseAddress = () => {
+        let result = null
+        if (user?.address) {
+            console.log(user_address)
+            result = {
+                ...user,
+                delivery_address: {
+                    address: user.address,
+                    city: user.city,
+                    country: user.country,
+                    latlon: { longitude: user.extra?.longitude, latitude: user.extra?.latitude }
+                },
+                isHomeAddress: true
+            }
+            setIsHomeAddress(true)
+        }
+        return result
+    }
+
 
     useEffect(() => {
-        if (homeAddress) {
-            setUser({ ...user, delivery_address: homeAddress, isHomeAddress: isHomeAddress })
-        }
+        
+        (async () => {
+            const _home = await parseAddress()
+            setHomeAddress(_home)
+        })().then(() => {
+            if (homeAddress) {
+                setUser(homeAddress)
+            }
+        })
     }, [])
+
+    useEffect(() => {},[homeAddress])
 
     const searchPlaces = async (address) => {
         if (address.address) {
@@ -56,10 +58,12 @@ export const AddressSearchComboField = (props) => {
     }
 
 
-    const deliverToHomeAddress = () => {
-        if (homeAddress) {
+    const deliverToHomeAddress = async () => {
+        if (user?.address) {
             setIsHomeAddress(true)
-            setUser({ ...user, delivery_address: homeAddress, isHomeAddress: isHomeAddress })
+            const _home = await parseAddress()
+            setHomeAddress(_home)
+            setUser(homeAddress)
         } else {
             navigate('/signin', { state: { from: '/' }, replace: true })
         }

@@ -58,7 +58,7 @@ function App(props) {
 
     return (
         <AlertProvider>
-            <div className="w-full h-screen overflow-hidden relative">
+            <div className="w-full font-sans h-screen overflow-hidden relative">
                 <div className='inset-0 h-screen md:p-5 bg-primary-500'>
                     <div className={`bg-white relative md:rounded-2xl ${removeInnerPadding && 'pb-16 sm:pb-10 lg:pb-0 '} w-full h-full overflow-hidden `}>
                         {

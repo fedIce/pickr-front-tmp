@@ -7,6 +7,7 @@ import { city_list, country_list } from './data'
 import { auth } from '../../../../config/firebase'
 import { findSetListValue, updateUser, uploadProfileImageAsync } from '../../../../functions/authFunctions'
 import { useAlert } from '../../../../GlobalContexts/ErrorContext'
+import { useAuth } from '../../../../GlobalContexts/AuthProvider'
 import { connect } from 'react-redux'
 import { setUserData } from '../../../../redux/actions'
 import SearchAddressPallete from '../../../../Components/CommandPalletes/SearchAddressPallete'
@@ -15,7 +16,7 @@ import { emptyStringIfUNDEFINED } from '../../../../functions/paymentFunctions'
 
 
 
-const ProfileUpdateForm = ({ updateUserState, user }) => {
+const ProfileUpdateForm = ({updateUserState, user}) => {
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [phone, setphone] = useState('')
@@ -25,8 +26,8 @@ const ProfileUpdateForm = ({ updateUserState, user }) => {
     const [address, setAddress] = useState('')
     const [loading, setLoading] = useState(false)
     const [uid, setUid] = useState(null)
-    const [email, setEmail] = useState(null)
-    const [imageUri, setImageUri] = useState(null)
+    const [email, setEmail] = useState('')
+    const [imageUri, setImageUri] = useState('')
     const [openModal, setOpenModal] = useState(false)
 
 
@@ -35,8 +36,8 @@ const ProfileUpdateForm = ({ updateUserState, user }) => {
 
     useEffect(() => {
         if(user && auth.currentUser){
-            setUid(auth.currentUser.uid)
-            setUsername(user.username)
+            setUid(user?.uid)
+            setUsername(user.username? user.username : user.displayName)
             setName(user.fullName)
             setphone(user.phone)
             setAddress(user?.address)
@@ -104,6 +105,8 @@ const ProfileUpdateForm = ({ updateUserState, user }) => {
                 })().then(() => {
                     setLoading(false)
                     alert.setalert({ title: 'Success!', body: 'your Pickr profile has been updated successfully..', type: 'success' })
+                }).catch((e) => {
+                    alert.setalert({ title: 'Error!', body: 'an error occured, try again!', type: 'error' })
                 })
 
             })

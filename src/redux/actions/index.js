@@ -257,6 +257,7 @@ export const updateOrderStatus = (docId, status, user = null) => {
         const db = firebase.firestore()
         console.log(status)
         if (status == 'delivered') {
+            // console.log("Delivered", status)
             db.collection("DeliveryRequests").doc(docId).update({
                 status: status
             }).then(() => {

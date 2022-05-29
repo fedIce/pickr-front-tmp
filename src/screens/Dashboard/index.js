@@ -21,7 +21,6 @@ const Dashboard = () => {
             <div className='flex-1 h-[95%] rounded-3xl lg:bg-primary-100 overflow-hidden'>
                 <div className='flex h-full w-full sm:mt-5'>
                     <div className='flex-1 h-full sm:px-5 overflow-hidden relative'>
-                        {/* <DashboardHeader user={user.user} /> */}
                         <Outlet />
                     </div>
                 </div>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useServiceSwitch } from '../../../GlobalContexts/ServiceSwitch'
 import { orderID } from '../../../config/validate'
 import PointProgressBar from '../../UI/PointProgressBar'
 import DeliveryAction from '../../DeliveryAction'
 import ConfirmDelivery from '../../ConfirmDelivery'
+import OrderReceipt from '../../../screens/Orders/OrderReceipt'
+import { EyeIcon } from '@heroicons/react/outline'
 
 const GroceryDelivery = (props) => {
     const { item } = props
@@ -12,7 +14,13 @@ const GroceryDelivery = (props) => {
     const { currency } = useServiceSwitch()
 
     const [openConfirmDelivery, setOpenConfirmDelivery] = useState(false)
+    const [openDetails, setOpenDetails] = useState(false)
 
+    useEffect(() => {
+        console.log(item?.status)
+
+        return () => console.log(item?.status) 
+    },[])
 
     const retrieveProgress = (status) => {
         switch (status) {
@@ -58,6 +66,14 @@ const GroceryDelivery = (props) => {
 
     return (
         <div className='w-[95%] h-auto p-2 md:p-4 bg-white shadow-lg ring-1 ring-black/5 rounded-xl space-y-2 my-4 '>
+            <OrderReceipt 
+                open={openDetails} 
+                setOpen={setOpenDetails} 
+                data={item} 
+                status={statusMsg} 
+                count={progress.length} 
+                progress={progress} />
+                
             <div className='flex justify-between items-center mx-4 py-4'>
                 <div className='flex items-center space-x-4'>
                     <div className='w-14 h-14'>
@@ -82,7 +98,10 @@ const GroceryDelivery = (props) => {
                 <PointProgressBar status={statusMsg} count={progress.length} progress={progress} />
             </div>
             <ConfirmDelivery code={'677'} {...props}  open={openConfirmDelivery} setOpen={setOpenConfirmDelivery} />
-
+            <div onClick={() => setOpenDetails(true)} className='w-full h-14 rounded-full flex justify-center space-x-4 items-center bg-green-600 hover:bg-green-900 cursor-pointer'>
+                <span className='text-md font-bold text-white'>View Details</span>
+                <EyeIcon className='base-icon text-white'/>
+            </div>
         </div>
     )
 }

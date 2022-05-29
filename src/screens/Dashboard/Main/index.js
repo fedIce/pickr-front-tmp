@@ -1,4 +1,3 @@
-import { ViewListIcon } from '@heroicons/react/outline'
 import React from 'react'
 import ProfileUpdateForm from '../Product/ProfileUpdateForm'
 

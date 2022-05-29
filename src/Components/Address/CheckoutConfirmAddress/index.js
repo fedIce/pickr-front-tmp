@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import SearchAddressPallete from '../../CommandPalletes/SearchAddressPallete'
 import { address } from '../../../screens/Cart/data'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../GlobalContexts/AuthProvider'
 
 const CheckoutConfirmAddress = (props) => {
     const navigate = useNavigate()
@@ -11,10 +12,9 @@ const CheckoutConfirmAddress = (props) => {
 
     let { user, updateUser } = props
     user = user.user
-    console.log(user)
 
 
-    const user_address = user?.delivery_address ? user.delivery_address?.address : 'No Address Entered'
+    const user_address = user?.delivery_address ? user.delivery_address?.address : user?.address ? user.address : 'No Address Entered'
     const homeAddress = user?.isHomeAddress ? user.isHomeAddress : null
 
     const deliverToHomeAddress = (result) => {
